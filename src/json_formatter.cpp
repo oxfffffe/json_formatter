@@ -46,6 +46,9 @@ std::string Json_formatter::format() {
             for (uint8_t i = 0; i < count_of_tabs; i++) {
                 formatted.append(tab);
             }
+        } else if (file_content[i] == ':') {            //`:` case
+            formatted.push_back(':');
+            formatted.push_back(' ');
         } else {
             formatted.push_back(file_content[i]);
         }
