@@ -52,15 +52,3 @@ std::string Json_formatter::format() {
     }
     return formatted;
 }
-
-
-
-
-
-
-
-
-
-
-
-
