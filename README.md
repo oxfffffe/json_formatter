@@ -1,4 +1,4 @@
-# Simple json beautifuler written in C++
+# Simple JSON beautifuler written in C++
 
 Example usage:
 `example.json`: 
