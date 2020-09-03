@@ -14,5 +14,4 @@ private:
     std::string file_content;
 };
 
-
 #endif // JSON_FORMATTER_HPP
