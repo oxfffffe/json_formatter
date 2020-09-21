@@ -1,4 +1,4 @@
-# Simple JSON formatter tool written in C++
+# JSON formatter written in C++
 
 Example usage:
 
