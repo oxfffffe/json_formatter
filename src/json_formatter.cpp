@@ -1,57 +1,78 @@
 #include "json_formatter.hpp"
 
-Json_formatter::Json_formatter(std::string filename) {
-    std::ifstream file_stream(filename);
-    std::string content((std::istreambuf_iterator<char>(file_stream))
-                       , std::istreambuf_iterator<char>());
-    file_content = content;
+Json_formatter::Json_formatter(const char* filename) {
+  assert(file_has_json_ext(filename) && "You specified non-JSON file, please try again.");
+  std::ifstream file_stream(filename);
+  std::string content((std::istreambuf_iterator<char>(file_stream))
+                     , std::istreambuf_iterator<char>());
+  data = content;
 }
 
-std::string Json_formatter::format() {
-    std::string formatted;
-    uint8_t count_of_tabs = 0;
-    const char* tab = "  ";
-    for (uint64_t i = 0; i < file_content.size(); i++) {
-        if (file_content[i] == '{') {                   //`{` case
-            formatted.push_back('{');
-            formatted.push_back('\n');
-            ++count_of_tabs;
-            for (uint8_t i = 0; i < count_of_tabs; i++) {
-                formatted.append(tab);
-            }
-        } else if (file_content[i] == '}') {            //`}` case
-            formatted.push_back('\n');
-            for (uint8_t i = 0; i < count_of_tabs - 1; i++) {
-                formatted.append(tab);
-            }
-          --count_of_tabs;
-            formatted.push_back('}');
-        } else if (file_content[i] == '[') {            //`[` case
-            formatted.push_back('[');
-            formatted.push_back('\n');
-          ++count_of_tabs;
-            for (uint8_t i = 0; i < count_of_tabs; i++) {
-                formatted.append(tab);
-            }
-        } else if (file_content[i] == ']') {            //`]` case
-            formatted.push_back('\n');
-            for (uint8_t i = 0; i < count_of_tabs - 1; i++) {
-                formatted.append(tab);
-            }
-          --count_of_tabs;
-            formatted.push_back(']');
-        } else if (file_content[i] == ',') {           //`,` case
-            formatted.push_back(',');
-            formatted.push_back('\n');
-            for (uint8_t i = 0; i < count_of_tabs; i++) {
-                formatted.append(tab);
-            }
-        } else if (file_content[i] == ':') {            //`:` case
-            formatted.push_back(':');
-            formatted.push_back(' ');
-        } else {
-            formatted.push_back(file_content[i]);
-        }
-    }
-    return formatted;
+bool Json_formatter::file_has_json_ext(std::string filename)
+{
+  std::string json_ext = ".json";
+  return filename.substr(filename.size() - json_ext.size()) == json_ext;
 }
+
+std::string Json_formatter::format() const {
+  std::string formatted;
+  uint8_t tabs = 0;
+  for (uint64_t i = 0; i < data.size(); i++) {
+    switch (data[i]) {
+      case(int)'{': {
+        formatted.push_back('{');
+        formatted.push_back('\n');
+        ++tabs;
+        for (uint8_t i = 0; i < tabs; i++) {
+          formatted.append(tab);
+        }
+        break;
+      }
+      case(int)'}': {
+        formatted.push_back('\n');
+        for (uint8_t i = 0; i < tabs - 1; i++) {
+          formatted.append(tab);
+        }
+        --tabs;
+        formatted.push_back('}');
+        break;
+      }
+      case(int)'[': {
+        formatted.push_back('[');
+        formatted.push_back('\n');
+        ++tabs;
+        for (uint8_t i = 0; i < tabs; i++) {
+          formatted.append(tab);
+        }
+        break;
+      }
+      case(int)']': {
+        formatted.push_back('\n');
+        for (uint8_t i = 0; i < tabs - 1; i++) {
+          formatted.append(tab);
+        }
+        --tabs;
+        formatted.push_back(']');
+        break;
+      }
+      case(int)',': {
+        formatted.push_back(',');
+        formatted.push_back('\n');
+        for (uint8_t i = 0; i < tabs; i++) {
+          formatted.append(tab);
+        }
+        break;
+      }
+      case(int)':': {
+        formatted.push_back(':');
+        formatted.push_back(' ');
+        break;
+      }
+      default: {
+        formatted.push_back(data[i]); break;
+      }
+    }
+  }
+  return formatted;
+}
+
