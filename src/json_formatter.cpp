@@ -19,7 +19,7 @@ std::string Json_formatter::format() const {
   uint8_t tabs = 0;
   for (uint64_t i = 0; i < data.size(); i++) {
     switch (data[i]) {
-      case(int)'{': {
+      case static_cast<int>('{'): {
         formatted.push_back('{');
         formatted.push_back('\n');
         ++tabs;
@@ -28,7 +28,7 @@ std::string Json_formatter::format() const {
         }
         break;
       }
-      case(int)'}': {
+      case static_cast<int>('}'): {
         formatted.push_back('\n');
         for (uint8_t i = 0; i < tabs - 1; i++) {
           formatted.append(tab);
@@ -37,7 +37,7 @@ std::string Json_formatter::format() const {
         formatted.push_back('}');
         break;
       }
-      case(int)'[': {
+      case static_cast<int>('['): {
         formatted.push_back('[');
         formatted.push_back('\n');
         ++tabs;
@@ -46,7 +46,7 @@ std::string Json_formatter::format() const {
         }
         break;
       }
-      case(int)']': {
+      case static_cast<int>(']'): {
         formatted.push_back('\n');
         for (uint8_t i = 0; i < tabs - 1; i++) {
           formatted.append(tab);
@@ -55,7 +55,7 @@ std::string Json_formatter::format() const {
         formatted.push_back(']');
         break;
       }
-      case(int)',': {
+      case static_cast<int>(','): {
         formatted.push_back(',');
         formatted.push_back('\n');
         for (uint8_t i = 0; i < tabs; i++) {
@@ -63,7 +63,7 @@ std::string Json_formatter::format() const {
         }
         break;
       }
-      case(int)':': {
+      case static_cast<int>(':'): {
         formatted.push_back(':');
         formatted.push_back(' ');
         break;
