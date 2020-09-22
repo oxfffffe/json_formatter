@@ -4,38 +4,10 @@ Example usage:
 
 input: 
 ```
-{"widget":{"debug":"on","window":{"title":"SampleKonfabulatorWidget","name":"main_window","width":500,"height":500},"image":{"src":"Images/Sun.png","name":"sun1","hOffset":250,"vOffset":250,"alignment":"center"},"text":{"data":"ClickHere","size":36,"style":"bold","name":"text1","hOffset":250,"vOffset":100,"alignment":"center","onMouseUp":"sun1.opacity=(sun1.opacity/100)*90;"}}}
+{"data":[{"type":"articles","id":2000123008,"attributes":{"title":"JSON:APIpaintsmybikeshed!","body":"Theshortestarticle.Ever.","created":"2015-05-22T14:56:29.000Z","updated":"2015-05-22T14:56:28.000Z"},"relationships":{"author":{"data":{"id":"42","type":"people"}}}}],"included":[{"type":"people","id":"42","attributes":{"name":"John","age":80,"gender":"male"}}]}
 ```
 Output:
+
 ![alt text](https://github.com/oxfffffe/json_formatter/blob/master/json_formatter.png?raw=true)
 ```
-{
-  "widget": {
-    "debug": "on",
-    "window": {
-      "title": "SampleKonfabulatorWidget",
-      "name": "main_window",
-      "width": 500,
-      "height": 500
-    },
-    "image": {
-      "src": "Images/Sun.png",
-      "name": "sun1",
-      "hOffset": 250,
-      "vOffset": 250,
-      "alignment": "center"
-    },
-    "text": {
-      "data": "ClickHere",
-      "size": 36,
-      "style": "bold",
-      "name": "text1",
-      "hOffset": 250,
-      "vOffset": 100,
-      "alignment": "center",
-      "onMouseUp": "sun1.opacity=(sun1.opacity/100)*90;"
-    }
-  }
-}
 
-```
