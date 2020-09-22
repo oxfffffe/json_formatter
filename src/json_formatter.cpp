@@ -20,13 +20,13 @@ std::string Json_formatter::format() const {
   bool is_first_quote = true;
   bool is_first_digit = true;
   std::string end_of_color("\e[0m");
-  std::string grey("\e[38;5;240m");
+  std::string gray("\e[38;5;240m");
   std::string mint("\e[38;5;72m");
   std::string purple("\e[38;5;176m");
   for (uint64_t i = 0; i < data.size(); i++) {
     switch (data[i]) {
       case static_cast<int>('{'): {
-        formatted.append(grey);
+        formatted.append(gray);
         formatted.push_back('{');
         formatted.append(end_of_color);
         formatted.push_back('\n');
@@ -42,13 +42,13 @@ std::string Json_formatter::format() const {
           formatted.append(tab);
         }
         --tabs;
-        formatted.append(grey);
+        formatted.append(gray);
         formatted.push_back('}');
         formatted.append(end_of_color);
         break;
       }
       case static_cast<int>('['): {
-        formatted.append(grey);
+        formatted.append(gray);
         formatted.push_back('[');
         formatted.append(end_of_color);
         formatted.push_back('\n');
@@ -64,7 +64,7 @@ std::string Json_formatter::format() const {
           formatted.append(tab);
         }
         --tabs;
-        formatted.append(grey);
+        formatted.append(gray);
         formatted.push_back(']');
         formatted.append(end_of_color);
         break;
