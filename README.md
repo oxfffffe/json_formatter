@@ -9,6 +9,6 @@ input:
 ```
 Output:
 
-![alt text](https://github.com/oxfffffe/json_formatter/blob/master/json_formatter.png?raw=true)
+![alt text](https://github.com/oxfffffe/json_formatter/blob/master/json.png?raw=true)
 ```
 
