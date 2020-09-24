@@ -25,17 +25,16 @@ void Json_formatter::append_brace(char brace, const std::string& color) const {
       formatted.append(tab);
     }
     --tabs;
-    formatted.append(color);
-    formatted.push_back(brace);
-    formatted.append(end_of_color);
   }
+
+  formatted.append(color);
+  formatted.push_back(brace);
+  formatted.append(end_of_color);
+
   if (brace == '{' ||
       brace == '[') {
-    formatted.append(color);
-    formatted.push_back(brace);
-    formatted.append(end_of_color);
-    formatted.push_back('\n');
     ++tabs;
+    formatted.push_back('\n');
     for (uint8_t i = 0; i < tabs; i++) {
       formatted.append(tab);
     }
