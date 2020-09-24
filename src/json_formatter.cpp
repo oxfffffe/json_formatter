@@ -2,8 +2,8 @@
 
 Json_formatter::Json_formatter(const char* filename) {
   assert(file_has_json_ext(filename) && "You specified non-JSON file, please try again.");
-  std::ifstream file_stream(filename);
-  std::string content((std::istreambuf_iterator<char>(file_stream)),
+  std::ifstream stream(filename);
+  std::string content((std::istreambuf_iterator<char>(stream)),
                        std::istreambuf_iterator<char>());
   data = content;
 }
@@ -13,66 +13,76 @@ bool Json_formatter::file_has_json_ext(std::string filename) {
   return filename.substr(filename.size() - json_ext.size()) == json_ext;
 }
 
-void Json_formatter::append_brace(char brace, const std::string& color) const {
-  if (is_inside_quotes) {
-    formatted.push_back(brace);
+void Json_formatter::append_tabs() const noexcept {
+  for (uint8_t i = 0; i < tabs; i++) {
+    json.append(tab);
+  }
+}
+
+void Json_formatter::append_brace(char brace, const std::string& color) const noexcept {
+  if (quoted) {
+    json.push_back(brace);
     return;
   }
-  if (brace == '}' ||
-      brace == ']') {
-    formatted.push_back('\n');
-    for (uint8_t i = 0; i < tabs - 1; i++) {
-      formatted.append(tab);
-    }
+  if (brace == '}' || brace == ']') {
     --tabs;
+    json.push_back('\n');
+    append_tabs();
   }
 
-  formatted.append(color);
-  formatted.push_back(brace);
-  formatted.append(end_of_color);
+  json.append(color);
+  json.push_back(brace);
+  json.append(end_of_color);
 
-  if (brace == '{' ||
-      brace == '[') {
+  if (brace == '{' || brace == '[') {
     ++tabs;
-    formatted.push_back('\n');
-    for (uint8_t i = 0; i < tabs; i++) {
-      formatted.append(tab);
-    }
+    json.push_back('\n');
+    append_tabs();
+    block = true;
   }
 }
 
-void Json_formatter::append_comma() const {
-  formatted.push_back(',');
-  if (!is_inside_quotes) {
-    formatted.push_back('\n');
-    for (uint8_t i = 0; i < tabs; i++) {
-      formatted.append(tab);
-    }
+void Json_formatter::append_comma() const noexcept {
+  json.push_back(',');
+  if (!quoted) {
+    json.push_back('\n');
+    append_tabs();
   }
+  comma = true;
 }
 
-void Json_formatter::append_semicolon() const {
-  formatted.push_back(':');
-  if (!is_inside_quotes) {
-    formatted.push_back(' ');
+void Json_formatter::append_semicolon() const noexcept {
+  json.push_back(':');
+  if (!quoted) {
+    json.push_back(' ');
   }
+  semicolon = true;
 }
 
-void Json_formatter::append_quote(const std::string& color) const {
-  formatted.append(color);
-  formatted.push_back('\"');
-  if (is_inside_quotes) {
-    formatted.append(end_of_color);
+void Json_formatter::append_quote(const std::string& color) const noexcept {
+  if ((!comma && semicolon && !block)) {
+    json.append(red);
   }
-  is_inside_quotes = !is_inside_quotes;
+  else if (!quoted) {
+    json.append(color);
+  }
+  json.push_back('\"');
+
+  if (quoted) {
+    json.append(end_of_color);
+  }
+  quoted    = !quoted;
+  comma     = false;
+  semicolon = false;
+  block     = false;
 }
 
-void Json_formatter::append_digit(char digit, const std::string& color) const {
-  if (!is_inside_quotes) {
-    formatted.append(color + digit);
-    formatted.append(end_of_color);
+void Json_formatter::append_digit(char digit, const std::string& color) const noexcept {
+  if (!quoted) {
+    json.append(color + digit);
+    json.append(end_of_color);
   } else {
-    formatted.push_back(digit);
+    json.push_back(digit);
   }
 }
 
@@ -121,10 +131,10 @@ std::string Json_formatter::format() const {
         break;
 
       default:
-        formatted.push_back(data[i]);
+        json.push_back(data[i]);
         break;
     }
   }
-  return formatted;
+  return json;
 }
 

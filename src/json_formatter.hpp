@@ -16,10 +16,13 @@ public:
 
 private:
   std::string data;
-  mutable std::string formatted;
-  const char* tab = "  ";
-  mutable bool is_inside_quotes = false;
+  mutable std::string json;
+  mutable bool quoted = false;
+  mutable bool semicolon = false;
+  mutable bool comma = false;
+  mutable bool block = false;
   mutable uint8_t tabs = 0;
+  const char* tab = "  ";
 #if defined (__linux__)
   const std::string end_of_color = "\e[0m";
   const std::string grey   = "\e[38;5;240m";
@@ -27,17 +30,19 @@ private:
   const std::string purple = "\e[38;5;176m";
   const std::string red    = "\e[38;5;174m";
 #else
-  const std::string end_of_color("");
-  const std::string grey("");
-  const std::string mint("");
-  const std::string purple("");
+  const std::string end_of_color = "";
+  const std::string grey = "";
+  const std::string mint = "";
+  const std::string purple = "";
+  const std::string red = "";
 #endif
   bool file_has_json_ext(std::string filename);
-  void append_brace(char brace, const std::string& color) const;
-  void append_comma() const;
-  void append_quote(const std::string& color) const;
-  void append_digit(char digit, const std::string& color) const;
-  void append_semicolon() const;
+  void append_brace(char brace, const std::string& color) const noexcept;
+  inline void append_comma() const noexcept;
+  inline void append_quote(const std::string& color) const noexcept;
+  inline void append_digit(char digit, const std::string& color) const noexcept;
+  inline void append_semicolon() const noexcept;
+  inline void append_tabs() const noexcept;
 };
 
 #endif // JSON_FORMATTER_HPP
