@@ -1,5 +1,4 @@
 #include "json_formatter.hpp"
-#include <iostream>
 
 Json_formatter::Json_formatter(const char* filename) {
   assert(file_has_json_ext(filename) && "You specified non-JSON file, please try again.");
@@ -14,7 +13,7 @@ bool Json_formatter::file_has_json_ext(std::string filename) {
   return filename.substr(filename.size() - json_ext.size()) == json_ext;
 }
 
-void Json_formatter::append_brace(char brace, std::string& formatted, uint8_t& tabs, const std::string& color) const {
+void Json_formatter::append_brace(char brace, const std::string& color) const {
   if (is_inside_quotes) {
     formatted.push_back(brace);
     return;
@@ -33,7 +32,7 @@ void Json_formatter::append_brace(char brace, std::string& formatted, uint8_t& t
   if (brace == '{' ||
       brace == '[') {
     formatted.append(color);
-    formatted.push_back('{');
+    formatted.push_back(brace);
     formatted.append(end_of_color);
     formatted.push_back('\n');
     ++tabs;
@@ -43,73 +42,70 @@ void Json_formatter::append_brace(char brace, std::string& formatted, uint8_t& t
   }
 }
 
-void Json_formatter::append_comma(std::string& text, uint8_t& tabs) const {
-  text.push_back(',');
+void Json_formatter::append_comma() const {
+  formatted.push_back(',');
   if (!is_inside_quotes) {
-    text.push_back('\n');
+    formatted.push_back('\n');
     for (uint8_t i = 0; i < tabs; i++) {
-      text.append(tab);
+      formatted.append(tab);
     }
   }
 }
 
-void Json_formatter::append_semicolon(std::string& text) const {
-  text.push_back(':');
+void Json_formatter::append_semicolon() const {
+  formatted.push_back(':');
   if (!is_inside_quotes) {
-    text.push_back(' ');
+    formatted.push_back(' ');
   }
 }
 
-void Json_formatter::append_quote(std::string& text) const {
-  if (!is_inside_quotes) {
-    text.append(mint + "\"");
-  } else {
-    text.append("\"");
-    text.append(end_of_color);
+void Json_formatter::append_quote(const std::string& color) const {
+  formatted.append(color);
+  formatted.push_back('\"');
+  if (is_inside_quotes) {
+    formatted.append(end_of_color);
   }
   is_inside_quotes = !is_inside_quotes;
 }
 
-void Json_formatter::append_digit(std::string& text,  char digit) const {
+void Json_formatter::append_digit(char digit, const std::string& color) const {
   if (!is_inside_quotes) {
-    text.append(purple + digit);
-    text.append(end_of_color);
+    formatted.append(color + digit);
+    formatted.append(end_of_color);
   } else {
-    text.push_back(digit);
+    formatted.push_back(digit);
   }
 }
 
 std::string Json_formatter::format() const {
-  std::string formatted;
-  uint8_t tabs = 0;
   for (uint64_t i = 0; i < data.size(); i++) {
     switch (data[i]) {
       case '{':
-        append_brace('{', formatted, tabs, grey);
+        append_brace('{', grey);
         break;
 
       case '}':
-        append_brace('}', formatted, tabs, grey);
+        append_brace('}', grey);
         break;
 
       case '[':
-        append_brace('[', formatted, tabs, grey);
+        append_brace('[', grey);
         break;
 
       case ']':
-        append_brace(']', formatted, tabs, grey);
+        append_brace(']', grey);
         break;
 
       case ',':
-        append_comma(formatted, tabs);
+        append_comma();
         break;
 
       case ':':
-        append_semicolon(formatted);
+        append_semicolon();
         break;
 
       case '"':
-        append_quote(formatted);
+        append_quote(purple);
         break;
 
       case '0':
@@ -122,7 +118,7 @@ std::string Json_formatter::format() const {
       case '7':
       case '8':
       case '9':
-        append_digit(formatted, data[i]);
+        append_digit(data[i], mint);
         break;
 
       default:

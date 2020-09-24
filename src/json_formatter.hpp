@@ -16,25 +16,28 @@ public:
 
 private:
   std::string data;
+  mutable std::string formatted;
   const char* tab = "  ";
   mutable bool is_inside_quotes = false;
+  mutable uint8_t tabs = 0;
 #if defined (__linux__)
-  std::string end_of_color = "\e[0m";
-  std::string grey = "\e[38;5;240m";
-  std::string mint = "\e[38;5;72m";
-  std::string purple = "\e[38;5;176m";
+  const std::string end_of_color = "\e[0m";
+  const std::string grey   = "\e[38;5;240m";
+  const std::string mint   = "\e[38;5;72m";
+  const std::string purple = "\e[38;5;176m";
+  const std::string red    = "\e[38;5;174m";
 #else
-  std::string end_of_color("");
-  std::string grey("");
-  std::string mint("");
-  std::string purple("");
+  const std::string end_of_color("");
+  const std::string grey("");
+  const std::string mint("");
+  const std::string purple("");
 #endif
   bool file_has_json_ext(std::string filename);
-  void append_brace(char brace, std::string& text, uint8_t& tabs, const std::string& color) const;
-  void append_comma(std::string& text, uint8_t& tabs) const;
-  void append_semicolon(std::string& text) const;
-  void append_quote(std::string& text) const;
-  void append_digit(std::string& text, char digit) const;
+  void append_brace(char brace, const std::string& color) const;
+  void append_comma() const;
+  void append_quote(const std::string& color) const;
+  void append_digit(char digit, const std::string& color) const;
+  void append_semicolon() const;
 };
 
 #endif // JSON_FORMATTER_HPP
