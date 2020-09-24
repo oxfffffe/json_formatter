@@ -8,7 +8,6 @@ class Json_formatter
 {
 public:
   Json_formatter() = delete;
-<<<<<<< HEAD
   Json_formatter(Json_formatter&) = delete;
   Json_formatter(Json_formatter&&) = delete;
   Json_formatter operator=(Json_formatter&) = delete;
@@ -36,15 +35,6 @@ private:
   void append_semicolon(std::string& text) const;
   void append_quote(std::string& text) const;
   void append_digit(std::string& text, char digit) const;
-=======
-    Json_formatter(const char* filename);
-    Json_formatter operator=(Json_formatter&) = delete;
-    std::string format() const;
-private:
-    bool file_has_json_ext(std::string filename);
-    std::string data;
-    const char* tab = "  ";
->>>>>>> eec0e41897978819419a53e4be56d97b0c3b04a9
 };
 
 #endif // JSON_FORMATTER_HPP
