@@ -30,12 +30,14 @@ private:
   const std::string mint   = "\e[38;5;72m";
   const std::string purple = "\e[38;5;176m";
   const std::string red    = "\e[38;5;174m";
+  const std::string yellow = "\e[38;5;11m";
 #else
   const std::string end_of_color = "";
-  const std::string grey = "";
-  const std::string mint = "";
+  const std::string grey   = "";
+  const std::string mint   = "";
   const std::string purple = "";
-  const std::string red = "";
+  const std::string red    = "";
+  const std::string yellow = "";
 #endif
   bool file_has_json_ext(std::string filename);
   void append_brace(char brace, const std::string& color) const noexcept;
@@ -44,6 +46,7 @@ private:
   inline void append_digit(char digit, const std::string& color) const noexcept;
   inline void append_semicolon() const noexcept;
   inline void append_tabs() const noexcept;
+  inline void append_bool() const noexcept;
 };
 
 #endif // JSON_FORMATTER_HPP

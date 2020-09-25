@@ -58,8 +58,10 @@ void Json_formatter::append_brace(char brace, const std::string& color) const no
   }
 }
 
-
 void Json_formatter::append_comma() const noexcept {
+  if (!quoted) {
+    json.append(end_of_color);
+  }
   json.push_back(',');
 
   if (!quoted) {
@@ -75,7 +77,14 @@ void Json_formatter::append_semicolon() const noexcept {
   if (!quoted) {
     json.push_back(' ');
   }
+  append_bool();
   semicolon = true;
+}
+
+void Json_formatter::append_bool() const noexcept {
+  if (!quoted) {
+    json.append(yellow);
+  }
 }
 
 void Json_formatter::append_quote(const std::string& color) const noexcept {
@@ -85,6 +94,7 @@ void Json_formatter::append_quote(const std::string& color) const noexcept {
   if (value || table) {
     json.append(red);
   }
+
   else if (!quoted) {
     json.append(color);
     array = false;
@@ -106,7 +116,7 @@ void Json_formatter::append_digit(char digit, const std::string& color) const no
   if (quoted) {
     json.push_back(digit);
   } else {
-    json.append(color + digit + end_of_color);
+    json.append(color + digit);
   }
 }
 
