@@ -21,6 +21,7 @@ private:
   mutable bool semicolon = false;
   mutable bool comma = false;
   mutable bool block = false;
+  mutable bool array = false;
   mutable uint8_t tabs = 0;
   const char* tab = "  ";
 #if defined (__linux__)

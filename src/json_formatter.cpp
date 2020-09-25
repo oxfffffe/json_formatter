@@ -24,26 +24,44 @@ void Json_formatter::append_brace(char brace, const std::string& color) const no
     json.push_back(brace);
     return;
   }
-  if (brace == '}' || brace == ']') {
+
+  if (brace == '}') {
     --tabs;
     json.push_back('\n');
     append_tabs();
+    block = false;
+  }
+
+  if (brace == ']') {
+    --tabs;
+    json.push_back('\n');
+    append_tabs();
+    array = false;
   }
 
   json.append(color);
   json.push_back(brace);
   json.append(end_of_color);
 
-  if (brace == '{' || brace == '[') {
+  if (brace == '{') {
     ++tabs;
     json.push_back('\n');
     append_tabs();
     block = true;
   }
+
+  if (brace == '[') {
+    ++tabs;
+    json.push_back('\n');
+    append_tabs();
+    array = true;
+  }
 }
+
 
 void Json_formatter::append_comma() const noexcept {
   json.push_back(',');
+
   if (!quoted) {
     json.push_back('\n');
     append_tabs();
@@ -53,6 +71,7 @@ void Json_formatter::append_comma() const noexcept {
 
 void Json_formatter::append_semicolon() const noexcept {
   json.push_back(':');
+
   if (!quoted) {
     json.push_back(' ');
   }
@@ -60,17 +79,23 @@ void Json_formatter::append_semicolon() const noexcept {
 }
 
 void Json_formatter::append_quote(const std::string& color) const noexcept {
-  if ((!comma && semicolon && !block)) {
+  bool value = semicolon && !comma && !block;
+  bool table = !semicolon && array;
+
+  if (value || table) {
     json.append(red);
   }
   else if (!quoted) {
     json.append(color);
+    array = false;
   }
+
   json.push_back('\"');
 
   if (quoted) {
     json.append(end_of_color);
   }
+
   quoted    = !quoted;
   comma     = false;
   semicolon = false;
@@ -78,11 +103,10 @@ void Json_formatter::append_quote(const std::string& color) const noexcept {
 }
 
 void Json_formatter::append_digit(char digit, const std::string& color) const noexcept {
-  if (!quoted) {
-    json.append(color + digit);
-    json.append(end_of_color);
-  } else {
+  if (quoted) {
     json.push_back(digit);
+  } else {
+    json.append(color + digit + end_of_color);
   }
 }
 
